@@ -1,0 +1,16 @@
+{
+  "costs": [
+    {
+      "threshold": 0.0,
+      "fee": 4.95
+    },
+    {
+      "threshold": 50.0,
+      "fee": 2.95
+    },
+    {
+      "threshold": 90.0,
+      "fee": 0.0
+    }
+  ]
+}
