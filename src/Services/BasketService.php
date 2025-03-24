@@ -6,6 +6,7 @@ use App\Domain\Models\Basket;
 use App\Domain\Models\BasketItem;
 use App\Domain\Repositories\Catalog;
 use App\Domain\Rules\FeeRules;
+use InvalidArgumentException;
 
 /**
  * BasketService is responsible for managing the basket's contents,
@@ -47,10 +48,11 @@ class BasketService
     public function addProduct(string $productCode): void
     {
         $product = $this->catalog->getByProductCode($productCode);
-        if ($product !== null) {
-            $basketItem = new BasketItem($product);
-            $this->basket->addItem($basketItem);
+        if ($product === null) {
+            throw new InvalidArgumentException("Product code '{$productCode}' does not exist in the catalog.");
         }
+        $basketItem = new BasketItem($product);
+        $this->basket->addItem($basketItem);
     }
 
     /**
