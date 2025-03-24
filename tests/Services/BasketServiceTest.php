@@ -7,6 +7,7 @@ use App\Domain\Repositories\Catalog;
 use App\Domain\Rules\FeeRules;
 use App\Services\BasketService;
 use App\Services\DiscountService;
+use InvalidArgumentException;
 use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\TestCase;
 
@@ -93,6 +94,25 @@ class BasketServiceTest extends TestCase
 
         // Assert
         $this->assertEquals(44.95, $total);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function testThrowsExceptionIfProductDoesNotExist()
+    {
+        $catalogMock = $this->createMock(Catalog::class);
+        $catalogMock->method('getByProductCode')->willReturn(null);
+
+        $discountServiceMock = $this->createMock(DiscountService::class);
+        $feeRuleMock = $this->createMock(FeeRules::class);
+
+        $basketService = new BasketService($catalogMock, $discountServiceMock, $feeRuleMock);
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage("Product code 'NON_EXISTENT_CODE' does not exist in the catalog.");
+
+        $basketService->addProduct('NON_EXISTENT_CODE');
     }
 
 }
