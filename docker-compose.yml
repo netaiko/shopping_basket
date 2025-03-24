@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    container_name: shopping_basket_php
+    ports:
+      - "8080:80"
+    volumes:
+      - .:/var/www/html
+    networks:
+      - shopping_basket_network
+    environment:
+      - PHP_MEMORY_LIMIT=256M
+
+  php:
+    image: php:8.2-cli
+    container_name: shopping_basket_php_cli
+    working_dir: /var/www/html
+    volumes:
+      - .:/var/www/html
+    networks:
+      - shopping_basket_network
+    command: tail -f /dev/null
+
+networks:
+  shopping_basket_network:
+    driver: bridge
